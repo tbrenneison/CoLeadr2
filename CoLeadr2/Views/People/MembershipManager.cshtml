@@ -1,0 +1,36 @@
+﻿@model CoLeadr2.Models.ViewModels.PersonGroupingViewModel
+
+@{
+    ViewBag.Title = "Membership Manager";
+}
+
+<h2>Membership Manager</h2>
+
+<p>Select the groups that @Model.FirstName @Model.LastName is in: </p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.HiddenFor(model => model.PersonId)
+        <!--bless the people who made checkboxlist(for), http://mvccbl.com/ -->
+        <!--seriously where has this helper been all my life-->
+        @Html.CheckBoxListFor(model => model.SelectedGroupIds,
+                       model => model.AllAvailableGroups,
+                       model => model.GroupId,
+                       model => model.Name,
+                       model => model.Members.Contains(Model.Person))
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update Group Memberships" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

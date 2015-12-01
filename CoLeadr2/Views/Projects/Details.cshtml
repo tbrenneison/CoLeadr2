@@ -1,0 +1,54 @@
+﻿@model CoLeadr2.Models.ViewModels.ProjectCreateViewModel
+
+<h2>Details: @Html.DisplayFor(model => model.Name)</h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectGroups)
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach(var group in Model.ProjectGroups)
+                {
+                    <li>@group.Name</li>
+                }
+            </ul>
+        </dd>
+
+        <dt>
+            Members On This Project: 
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach (var name in Model.ProjectMembers)
+                {
+                    <li>@name</li>
+                }
+            </ul>
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
