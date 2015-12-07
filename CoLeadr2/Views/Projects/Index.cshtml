@@ -25,6 +25,7 @@
             @Html.DisplayFor(modelItem => item.EndDate)
         </td>
         <td>
+            @Html.ActionLink("Manage Tasks", "TaskList", "ProjectTasks", new { projectId = item.ProjectId }, null) |
             @Html.ActionLink("Edit", "Edit", new { id=item.ProjectId }) |
             @Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId })

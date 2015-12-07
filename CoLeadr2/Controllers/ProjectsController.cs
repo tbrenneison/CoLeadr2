@@ -47,7 +47,8 @@ namespace CoLeadr2.Controllers
             viewmodel.EndDate = project.EndDate;
             viewmodel.ProjectGroups = project.ProjectGroups.ToList();
             viewmodel.ProjectMembers = MemberNames;
-            viewmodel.ProjectId = project.ProjectId; 
+            viewmodel.ProjectId = project.ProjectId;
+            viewmodel.ProjectTasks = project.ProjectTasks.ToList();
 
             
 
@@ -58,12 +59,10 @@ namespace CoLeadr2.Controllers
         public ActionResult Create()
         {
             ProjectCreateViewModel viewmodel = new ProjectCreateViewModel();
-            List<Group> AllGroups = new List<Group>(); 
-            foreach(Group g in db.Groups)
-            {
-                AllGroups.Add(g); 
-            }
-            viewmodel.AllAvailableGroups = AllGroups;
+
+            viewmodel.AllAvailableGroups = viewmodel.GetAllGroups();
+            viewmodel.AllAvailablePeople = viewmodel.GetAllMembers();
+
             return View(viewmodel);
         }
 
@@ -83,11 +82,14 @@ namespace CoLeadr2.Controllers
 
                 //add groups to project 
                     //you need to assign from an existing list
-                List<Group> GroupsForProject = new List<Group>(); 
-                foreach(int groupId in viewmodel.SelectedGroupIds)
+                List<Group> GroupsForProject = new List<Group>();
+                if (viewmodel.SelectedGroupIds != null)
                 {
-                    Group group = db.Groups.Find(groupId);
-                    GroupsForProject.Add(group); 
+                    foreach (int groupId in viewmodel.SelectedGroupIds)
+                    {
+                        Group group = db.Groups.Find(groupId);
+                        GroupsForProject.Add(group);
+                    }
                 }
                 project.ProjectGroups = GroupsForProject; 
 
@@ -100,17 +102,19 @@ namespace CoLeadr2.Controllers
                 {
                     foreach(Person member in group.Members)
                     {
-                        member.CreateNewRecord(member.PersonId, project.ProjectId, true);
+                            member.CreateNewRecord(member.PersonId, project.ProjectId, true);   
                     }
                 }
                 
 
 
-                return RedirectToAction("Index");
+                return RedirectToAction("AddProjectTask", "ProjectTasks", new { projectId = project.ProjectId } );
             }
 
             return View(viewmodel);
         }
+
+        
 
         // GET: Projects/Edit/5
         public ActionResult Edit(int? id)

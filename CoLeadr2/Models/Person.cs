@@ -31,9 +31,25 @@ namespace CoLeadr2.Models
 
         [Display(Name = "Group Memberships")]
         public virtual List<Group> Groups { get; set; }
+        [Display(Name = "Projects")]
+        public virtual List<Project> Projects { get; set; }
 
 
-         //METHODS!!!
+        //METHODS!!!
+
+        public List<int> GetGroupTags()
+        {
+            CoLeadr2Context db = new CoLeadr2Context();
+            //gets all the ids of the groups this person has membership in and puts them in a list
+            Person person = db.People.Find(this.PersonId);
+            List<int> GroupTags = new List<int>();
+            foreach(Group g in person.Groups)
+            {
+                GroupTags.Add(g.GroupId); 
+            }
+
+            return GroupTags; 
+        }
 
         //adds person to a group
             //and adds person to that group's projects with removewithgroup flag == true
@@ -45,8 +61,6 @@ namespace CoLeadr2.Models
             Group group = db.Groups.Find(GroupId);
 
             group.Members.Add(person);
-
-            //add pprs
             foreach(Project project in group.Projects)
             {
                 CreateNewRecord(this.PersonId, project.ProjectId, true); 

@@ -30,13 +30,37 @@
             <div class="col-md-10">
                 <!--bless the people who made checkboxlist(for), http://mvccbl.com/ -->
                 <!--seriously where has this helper been all my life-->
+                <div id="groups">
                 @Html.CheckBoxListFor(model => model.SelectedGroupIds,
                        model => model.AllAvailableGroups,
-                       model => model.GroupId,
-                       model => model.Name,
-                       model => model.Projects.Contains(Model.Project))
+                       entity => entity.GroupId,
+                       entity => entity.Name,
+                       entity => entity.Projects.Contains(Model.Project))
+                </div>
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AllAvailablePeople, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <p>these currently do not do anything, there is no controller action hooked up to it</p>
+                <div id="members">
+                @Html.CheckBoxListFor(model => model.SelectedPersonIds,
+                       model => model.AllAvailablePeople,
+                       entity => entity.PersonId,
+                       entity => entity.FirstName,
+                       entity => entity.Projects.Contains(Model.Project))
+                </div>
+            </div>
+        </div>
+
+        <div id="membership-data">
+            @foreach(var group in Model.AllAvailableGroups)
+            {   
+                <span id="group-@group.GroupId" data-members="[@group.GetMemberIds()]"></span>
+            }
+        </div>
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -49,3 +73,28 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+<script>
+    //when an input is clicked in the #groups div
+    $("#groups").find("input").click(function () {
+        //groupId is the value of the input
+        var groupId = $(this).val();
+        //spanId is the span element for that group
+        var spanId = "#group-" + groupId;
+        //evaluate the data attribute on the span element to get membership PersonIds
+        var groupMemberIds = eval($("#membership-data").find(spanId).attr("data-members"));
+        //groupChecked = true/false (is it checked?)
+        var groupChecked = $(this).is(":checked");
+
+        //for every personId in groupMemberIds
+        groupMemberIds.map(function (personId) {
+            //selector = [value="personId"];
+            var selector = "[value='" + personId + "']";
+            //target = find selector in #members div 
+            var target = $("#members").find(selector);
+            //target has property "checked" true/false to match groupChecked
+            target.prop('checked', groupChecked);
+        });
+    });
+</script>
+

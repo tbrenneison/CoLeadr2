@@ -194,21 +194,53 @@ namespace CoLeadr2.Controllers
                 {
                     db.PersonProjectRecords.Remove(ppr);
                 }
-                db.SaveChanges(); 
+                db.SaveChanges();
 
-
-                //person should only be in groups with selected ids, so clear out all their groups 
-                person.ClearGroups(); 
-                //if there are selected ids, add the person to those groups
-                if(viewmodel.SelectedGroupIds != null)
+                if (person.Groups != null && viewmodel.SelectedGroupIds != null)
                 {
+                    List<Group> existingGroups = new List<Group>();
                     foreach (int id in viewmodel.SelectedGroupIds)
                     {
-                        person.AddToGroup(id);
+                        Group group = db.Groups.Find(id);
+                        existingGroups.Add(group);
                     }
                 }
+               
+                //determine if any group memberships have changed
+                bool hasChanged = false;
+                    //if the selected groups and previous groups are not the same set hasChanged to true
+                if (viewmodel.SelectedGroupIds != null)
+                {
+                    foreach (var Groupid in viewmodel.SelectedGroupIds)
+                    {
+                        Group group = db.Groups.Find(Groupid);
+                        if (person.Groups.Contains(group) != true)
+                        {
+                            hasChanged = true;
+                        }
+                    }
+                }
+                    //if the person is being added to groups and previously was not in any groups set hasChanged to true
+                if( person.Groups == null && viewmodel.SelectedGroupIds != null)
+                {
+                    hasChanged = true; 
+                }
 
+                if (hasChanged == true)
+                {
 
+                    //person should only be in groups with selected ids, so clear out all their groups 
+                    person.ClearGroups();
+                    //if there are selected ids, add the person to those groups
+                    if (viewmodel.SelectedGroupIds != null)
+                    {
+                        foreach (int id in viewmodel.SelectedGroupIds)
+                        {
+                            person.AddToGroup(id);
+                        }
+                    }
+                }
+               
             return RedirectToAction("Index");
             }
             else

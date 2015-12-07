@@ -46,6 +46,24 @@
             </ul>
         </dd>
 
+        <dt>
+            Project Tasks:
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach (var ptask in Model.ProjectTasks)
+                {
+                    <li>@ptask.Description
+                        @if(ptask.IsComplete == true)
+                        {
+                            <span><i>(Completed)</i></span>
+                        }
+                    </li>
+                }
+            </ul>
+        </dd>
+
     </dl>
 </div>
 <p>

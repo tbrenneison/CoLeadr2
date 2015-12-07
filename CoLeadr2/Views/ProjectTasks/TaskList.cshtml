@@ -1,0 +1,41 @@
+﻿@model IEnumerable<CoLeadr2.Models.ProjectTask>
+
+@{
+    ViewBag.Title = "TaskList";
+}
+
+<h2>Task List: @ViewBag.Project</h2>
+
+<p>
+    @Html.ActionLink("Add New Task", "AddProjectTask", new { projectId = ViewBag.ProjectId }) 
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsComplete)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsComplete)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProjectTaskId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ProjectTaskId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProjectTaskId })
+        </td>
+    </tr>
+}
+
+</table>
+
+@Html.ActionLink("Back to Project List", "Index", "Projects")

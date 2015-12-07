@@ -21,9 +21,46 @@ namespace CoLeadr2.Models.ViewModels
         public List<Group> ProjectGroups { get; set; }
         [Display(Name = "All Groups")]
         public List<Group> AllAvailableGroups { get; set; }
+
+        public List<Person>AllAvailablePeople { get; set; }
+
         //no one sees this
         public int[] SelectedGroupIds { get; set; }
 
+        public int[] SelectedPersonIds { get; set; }
+        //list of all members on the project
         public List<string>ProjectMembers { get; set; }
+
+
+        public List<ProjectTask> ProjectTasks { get; set; }
+
+
+        //METHODS!!!
+        
+        public List<Group> GetAllGroups()
+        {
+            CoLeadr2Context db = new CoLeadr2Context();
+
+            List<Group> AllGroups = new List<Group>();
+            foreach (Group g in db.Groups)
+            {
+                AllGroups.Add(g);
+            }
+
+            return AllGroups;
+        }
+
+        public List<Person> GetAllMembers()
+        {
+            CoLeadr2Context db = new CoLeadr2Context();
+
+            List<Person> AllMembers = new List<Person>();
+            foreach (Person p in db.People)
+            {
+                AllMembers.Add(p);
+            }
+
+            return AllMembers;
+        }
     }
 }
