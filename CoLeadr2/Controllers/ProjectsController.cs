@@ -34,19 +34,12 @@ namespace CoLeadr2.Controllers
                 return HttpNotFound();
             }
 
-            //make a list of member names based on project pprs
-            List<string> MemberNames = new List<string>(); 
-            foreach(PersonProjectRecord ppr in project.PersonProjectRecords)
-            {
-                MemberNames.Add(ppr.GetMemberName());
-            }
-
             //viewmodel
             ProjectCreateViewModel viewmodel = new ProjectCreateViewModel();
             viewmodel.Name = project.Name;
             viewmodel.EndDate = project.EndDate;
             viewmodel.ProjectGroups = project.ProjectGroups.ToList();
-            viewmodel.ProjectMembers = MemberNames;
+            viewmodel.ProjectMembers = project.ProjectMembers.ToList();
             viewmodel.ProjectId = project.ProjectId;
             viewmodel.ProjectTasks = project.ProjectTasks.ToList();
 
@@ -91,22 +84,22 @@ namespace CoLeadr2.Controllers
                         GroupsForProject.Add(group);
                     }
                 }
-                project.ProjectGroups = GroupsForProject; 
+                project.ProjectGroups = GroupsForProject;
+
+                //add people to project 
+                List<Person> MembersForProject = new List<Person>(); 
+                if (viewmodel.SelectedPersonIds != null)
+                {
+                    foreach (int personId in viewmodel.SelectedPersonIds)
+                    {
+                        Person person = db.People.Find(personId);
+                        MembersForProject.Add(person); 
+                    }
+                }
+                project.ProjectMembers = MembersForProject; 
 
                 db.Projects.Add(project);
                 db.SaveChanges();
-
-                //create pprs for every individual in the group
-                    //with RemoveWithGroup flag == true
-                foreach(Group group in GroupsForProject)
-                {
-                    foreach(Person member in group.Members)
-                    {
-                            member.CreateNewRecord(member.PersonId, project.ProjectId, true);   
-                    }
-                }
-                
-
 
                 return RedirectToAction("AddProjectTask", "ProjectTasks", new { projectId = project.ProjectId } );
             }
@@ -135,13 +128,21 @@ namespace CoLeadr2.Controllers
             viewmodel.Project = project;
             viewmodel.ProjectId = project.ProjectId; 
             viewmodel.ProjectGroups = project.ProjectGroups.ToList();
+            viewmodel.ProjectMembers = project.ProjectMembers.ToList(); 
 
             List<Group> AllGroups = new List<Group>(); 
             foreach(Group g in db.Groups)
             {
                 AllGroups.Add(g); 
             }
-            viewmodel.AllAvailableGroups = AllGroups; 
+            viewmodel.AllAvailableGroups = AllGroups;
+
+            List<Person> AllPeople = new List<Person>(); 
+            foreach(Person p in db.People)
+            {
+                AllPeople.Add(p); 
+            }
+            viewmodel.AllAvailablePeople = AllPeople;
 
             return View(viewmodel);
         }
@@ -161,73 +162,6 @@ namespace CoLeadr2.Controllers
                 project.Name = viewmodel.Name;
                 project.EndDate = viewmodel.EndDate;
 
-                //if selected Groups in viewmodel do not match existing groups
-                //clear out pprs with rwg flag set to true
-                List<PersonProjectRecord> toRemove = new List<PersonProjectRecord>(); 
-                if(viewmodel.SelectedGroupIds != null)
-                {
-                    foreach(Group group in project.ProjectGroups)
-                    {
-                        //if the group is not in the selected groups
-                        if(viewmodel.SelectedGroupIds.Contains(group.GroupId) != true)
-                        {
-                            foreach(Project p in group.Projects)
-                            {
-                                foreach(PersonProjectRecord ppr in p.PersonProjectRecords)
-                                {
-                                    //if projectId matchs project and RMG is true
-                                    if(ppr.ProjectId == project.ProjectId && ppr.RemoveWithGroup == true)
-                                    {
-                                        toRemove.Add(ppr); 
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else if(viewmodel.SelectedGroupIds == null)
-                {
-                    foreach (PersonProjectRecord ppr in db.PersonProjectRecords)
-                    {
-                        if (ppr.ProjectId == project.ProjectId && ppr.RemoveWithGroup == true)
-                        {
-                            toRemove.Add(ppr);
-                        }
-                    }
-                }
-                else
-                {
-                    //do nothing
-                }
-                //actually remove pprs
-                foreach (PersonProjectRecord ppr in toRemove)
-                {
-                    db.PersonProjectRecords.Remove(ppr);
-                }
-                db.SaveChanges();
-
-                //compare selected groupIds to existing groups and create pprs for newly-added groups
-                if(viewmodel.SelectedGroupIds != null)
-                {
-                    //list of existing groups
-                    List<int> ExistingGroupIds = new List<int>(); 
-                    foreach(Group g in project.ProjectGroups)
-                    {
-                        ExistingGroupIds.Add(g.GroupId); 
-                    }
-                    foreach(var Id in viewmodel.SelectedGroupIds)
-                    {   //if the group is newly-added
-                        if(ExistingGroupIds.Contains(Id) != true)
-                        {   //create a ppr for its members
-                            Group group = db.Groups.Find(Id); 
-                            foreach(Person member in group.Members)
-                            {
-                                member.CreateNewRecord(member.PersonId, project.ProjectId, true); 
-                            }
-                        }
-                    }
-                }
-
                 //clear all project groups and add the selected groups
                 project.ClearGroups(); 
                 List<Group> ProjGroups = new List<Group>();
@@ -238,7 +172,20 @@ namespace CoLeadr2.Controllers
                         ProjGroups.Add(db.Groups.Find(GroupId));
                     }
                 }
-                project.ProjectGroups = ProjGroups; 
+                project.ProjectGroups = ProjGroups;
+
+                //clear all project members and add selected members
+                project.ClearMembers();
+                List<Person> ProjMembers = new List<Person>(); 
+                if(viewmodel.SelectedPersonIds != null)
+                {
+                    foreach(int PersonId in viewmodel.SelectedPersonIds)
+                    {
+                        ProjMembers.Add(db.People.Find(PersonId)); 
+                    }
+                }
+                project.ProjectMembers = ProjMembers; 
+
 
                 //save changes
                 db.Entry(project).State = EntityState.Modified;

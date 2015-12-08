@@ -19,6 +19,10 @@ namespace CoLeadr2.Models.ViewModels
 
         [Display(Name = "Project Groups")]
         public List<Group> ProjectGroups { get; set; }
+        [Display(Name = "Project Members")]
+        public List<Person> ProjectMembers { get; set; }
+
+
         [Display(Name = "All Groups")]
         public List<Group> AllAvailableGroups { get; set; }
         [Display(Name = "All Members")]
@@ -28,9 +32,6 @@ namespace CoLeadr2.Models.ViewModels
         public int[] SelectedGroupIds { get; set; }
 
         public int[] SelectedPersonIds { get; set; }
-        //list of all members on the project
-        public List<string>ProjectMembers { get; set; }
-
 
         public List<ProjectTask> ProjectTasks { get; set; }
 

@@ -31,10 +31,13 @@ namespace CoLeadr2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ProjectTask projectTask = db.ProjectTasks.Find(id);
+            Project project = db.Projects.Find(projectTask.ProjectId);
             if (projectTask == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.Project = project.Name;
+            ViewBag.ProjectId = project.ProjectId;
             return View(projectTask);
         }
 
@@ -42,11 +45,16 @@ namespace CoLeadr2.Controllers
         public ActionResult AddProjectTask(int? projectId)
         {
             Project project = db.Projects.Find(projectId);
-            ViewBag.Name = project.Name;
+            ViewBag.Project = project.Name;
+            ViewBag.ProjectId = project.ProjectId; 
             return View();
+
+            /*
+            create, create, create, create ... another button "i'm done"
+            */
         }
 
-        // POST: ProjectTasks/Create
+        // POST: ProjectTasks/AddProjectTask
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -57,7 +65,7 @@ namespace CoLeadr2.Controllers
             {
                 db.ProjectTasks.Add(projectTask);
                 db.SaveChanges();
-                return RedirectToAction("Index", "Projects");
+                return RedirectToAction("TaskList", "ProjectTasks", new { projectId = projectTask.ProjectId});
             }
 
             return View(projectTask);
@@ -72,10 +80,13 @@ namespace CoLeadr2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ProjectTask projectTask = db.ProjectTasks.Find(id);
+            Project project = db.Projects.Find(projectTask.ProjectId); 
             if (projectTask == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.Project = project.Name;
+            ViewBag.ProjectId = project.ProjectId;
             return View(projectTask);
         }
 
@@ -103,10 +114,13 @@ namespace CoLeadr2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ProjectTask projectTask = db.ProjectTasks.Find(id);
+            Project project = db.Projects.Find(projectTask.ProjectId);
             if (projectTask == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.Project = project.Name;
+            ViewBag.ProjectId = project.ProjectId;
             return View(projectTask);
         }
 

@@ -5,11 +5,12 @@
 }
 <ol class="breadcrumb">
     <li>@Html.ActionLink("Projects Index", "Index", "Projects")</li>
-    <li>Project</li>
+    <li>@Html.ActionLink((string)ViewBag.Project, "Details", "Projects", new { id = ViewBag.ProjectId }, null)</li>
+    <li>@Html.ActionLink("Project Tasks", "TaskList", "ProjectTasks", new { id = ViewBag.ProjectId }, null)</li>
     <li class="active">Add Project Task</li>
 </ol>
 
-<h2>Add Project Task: @ViewBag.Name</h2>
+<h2>Add Project Task: @ViewBag.Project</h2>
 
 @using (Html.BeginForm()) 
 {
@@ -45,5 +46,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Task Index", "TaskList", "ProjectTasks", new { Projectid = ViewBag.ProjectId }, null)
 </div>

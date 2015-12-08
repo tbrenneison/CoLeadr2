@@ -1,8 +1,15 @@
 ﻿@model IEnumerable<CoLeadr2.Models.ProjectTask>
 
 @{
-    ViewBag.Title = "TaskList";
+    ViewBag.Title = "Task List";
 }
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Projects Index", "Index", "Projects")</li>
+    <li>@Html.ActionLink((string)ViewBag.Project, "Details", "Projects", new { id = ViewBag.ProjectId }, null)</li>
+    <li class="active">Project Task List</li>
+</ol>
+
+
 
 <h2>Task List: @ViewBag.Project</h2>
 

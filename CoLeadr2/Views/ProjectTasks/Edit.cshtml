@@ -3,6 +3,12 @@
 @{
     ViewBag.Title = "Edit";
 }
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Projects Index", "Index", "Projects")</li>
+    <li>@Html.ActionLink((string)ViewBag.Project, "Details", "Projects", new { id = ViewBag.ProjectId }, null)</li>
+    <li>@Html.ActionLink("Project Tasks", "TaskList", "ProjectTasks", new { projectId = ViewBag.ProjectId }, null)</li>
+    <li class="active">Edit Project Task</li>
+</ol>
 
 <h2>Edit</h2>
 

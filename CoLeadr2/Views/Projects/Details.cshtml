@@ -44,9 +44,9 @@
 
         <dd>
             <ul>
-                @foreach (var name in Model.ProjectMembers)
+                @foreach (var person in Model.ProjectMembers)
                 {
-                    <li>@name</li>
+                    <li>@person.FirstName @person.LastName</li>
                 }
             </ul>
         </dd>

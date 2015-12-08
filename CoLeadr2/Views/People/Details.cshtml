@@ -91,6 +91,19 @@
             </ul>
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Projects)
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach (var project in Model.Projects)
+                {
+                    <li>@project.Name</li>
+                }
+            </ul>
+        </dd>
+
     </dl>
 </div>
 <p>

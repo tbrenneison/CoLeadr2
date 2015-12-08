@@ -77,9 +77,26 @@ namespace CoLeadr2.Models
             CoLeadr2Context db = new CoLeadr2Context();
 
             Person person = db.People.Find(this.PersonId);
-            Project project = db.Projects.Find(ProjectId); 
+            Project project = db.Projects.Find(ProjectId);
 
-            
+            if (project.ProjectMembers.Contains(person) != true)
+            {
+                project.ProjectMembers.Add(person);
+            }
+
+        }
+
+        public void RemoveFromProject(int ProjectId)
+        {
+            CoLeadr2Context db = new CoLeadr2Context();
+
+            Person person = db.People.Find(this.PersonId);
+            Project project = db.Projects.Find(ProjectId);
+
+            if (project.ProjectMembers.Contains(person))
+            {
+                project.ProjectMembers.Remove(person);
+            }
         }
 
 
