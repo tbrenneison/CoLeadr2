@@ -1,5 +1,10 @@
 ﻿@model CoLeadr2.Models.ViewModels.ProjectCreateViewModel
 
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Projects Index", "Index", "Projects")</li>
+    <li class="active">Create New Project</li>
+</ol>
+
 <h2>Create A Project</h2>
 
 @using (Html.BeginForm()) 

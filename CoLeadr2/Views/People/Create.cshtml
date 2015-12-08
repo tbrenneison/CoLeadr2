@@ -3,8 +3,12 @@
 @{
     ViewBag.Title = "Create";
 }
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Member Index", "Index", "People")</li>
+    <li class="active">Add New Member</li>
+</ol>
 
-<h2>Add a Member</h2>
+<h2>Add New Member</h2>
 
 
 @using (Html.BeginForm()) 

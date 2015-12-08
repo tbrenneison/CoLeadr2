@@ -3,6 +3,11 @@
 @{
     ViewBag.Title = "Membership Manager";
 }
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Member Index", "Index","People")</li>
+    <li>@Html.ActionLink(Model.FirstName + " " + Model.LastName, "Details", "People", new { id = Model.PersonId }, null)</li>
+    <li class="active">Membership Manager</li>
+</ol>
 
 <h2>Membership Manager</h2>
 

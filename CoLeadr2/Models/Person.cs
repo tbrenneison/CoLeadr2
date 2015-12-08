@@ -37,20 +37,6 @@ namespace CoLeadr2.Models
 
         //METHODS!!!
 
-        public List<int> GetGroupTags()
-        {
-            CoLeadr2Context db = new CoLeadr2Context();
-            //gets all the ids of the groups this person has membership in and puts them in a list
-            Person person = db.People.Find(this.PersonId);
-            List<int> GroupTags = new List<int>();
-            foreach(Group g in person.Groups)
-            {
-                GroupTags.Add(g.GroupId); 
-            }
-
-            return GroupTags; 
-        }
-
         //adds person to a group
             //and adds person to that group's projects with removewithgroup flag == true
         public void AddToGroup(int GroupId)
@@ -61,14 +47,44 @@ namespace CoLeadr2.Models
             Group group = db.Groups.Find(GroupId);
 
             group.Members.Add(person);
+
+            /*
             foreach(Project project in group.Projects)
             {
                 CreateNewRecord(this.PersonId, project.ProjectId, true); 
             }
+            */
             
             db.SaveChanges();
         }
 
+        public void RemoveFromGroup(int GroupId)
+        {
+            CoLeadr2Context db = new CoLeadr2Context();
+
+            Person person = db.People.Find(this.PersonId);
+            Group group = db.Groups.Find(GroupId);
+
+            if (group.Members.Contains(person))
+            {
+                group.Members.Remove(person);
+            }
+            db.SaveChanges();
+        }
+
+        public void AddToProject(int ProjectId)
+        {
+            CoLeadr2Context db = new CoLeadr2Context();
+
+            Person person = db.People.Find(this.PersonId);
+            Project project = db.Projects.Find(ProjectId); 
+
+            
+        }
+
+
+
+        /* don't need this anymore but keeping it for prosperity 
 
         //clears out the person's group memberships entirely 
         public void ClearGroups()
@@ -89,6 +105,7 @@ namespace CoLeadr2.Models
             }
             db.SaveChanges();
         }
+        */
 
         //create new personprojectrecord
         public void CreateNewRecord(int PersonId, int ProjectId, bool RemoveWithGroup)

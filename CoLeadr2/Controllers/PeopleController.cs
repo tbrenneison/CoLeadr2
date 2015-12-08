@@ -148,6 +148,43 @@ namespace CoLeadr2.Controllers
             if (ModelState.IsValid)
             {
                 Person person = db.People.Find(viewmodel.PersonId);
+                
+
+                //determine what groups the person was already in by comparing existing and checked groups:
+                List<Group> existingGroups = new List<Group>(); 
+                foreach(Group g in person.Groups)
+                {
+                    existingGroups.Add(g); 
+                }
+                List<Group> checkedGroups = new List<Group>();
+                if (viewmodel.SelectedGroupIds != null)
+                {
+                    foreach (var GroupId in viewmodel.SelectedGroupIds)
+                    {
+                        Group thisGroup = db.Groups.Find(GroupId);
+                        checkedGroups.Add(thisGroup);
+                    }
+                }
+                //add/remove people from groups 
+                foreach (Group g in db.Groups)
+                {
+                    if (existingGroups.Contains(g) == true && checkedGroups.Contains(g) == false)
+                    {
+                        person.RemoveFromGroup(g.GroupId);
+                    }
+                    else if (existingGroups.Contains(g) == false && checkedGroups.Contains(g) == true)
+                    {
+                        person.AddToGroup(g.GroupId);
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
+                }
+                db.SaveChanges();
+
+
+                /*
                 List<PersonProjectRecord> toRemove = new List<PersonProjectRecord>();
                 if (viewmodel.SelectedGroupIds != null)
                 {
@@ -240,8 +277,8 @@ namespace CoLeadr2.Controllers
                         }
                     }
                 }
-               
-            return RedirectToAction("Index");
+               */
+                return RedirectToAction("Index");
             }
             else
             {

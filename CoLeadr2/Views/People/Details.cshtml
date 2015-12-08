@@ -3,6 +3,11 @@
 @{
     ViewBag.Title = "Details";
 }
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Member Index", "Index", "People")</li>
+    <li>@Html.ActionLink(Model.FirstName + " " + Model.LastName, "Details", "People", new { id = Model.PersonId }, null)</li>
+    <li class="active">Details</li>
+</ol>
 
 <h2>Member Details: @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</h2>
 

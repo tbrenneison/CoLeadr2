@@ -21,7 +21,7 @@ namespace CoLeadr2.Models.ViewModels
         public List<Group> ProjectGroups { get; set; }
         [Display(Name = "All Groups")]
         public List<Group> AllAvailableGroups { get; set; }
-
+        [Display(Name = "All Members")]
         public List<Person>AllAvailablePeople { get; set; }
 
         //no one sees this

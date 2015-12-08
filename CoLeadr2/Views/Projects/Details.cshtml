@@ -1,4 +1,9 @@
 ﻿@model CoLeadr2.Models.ViewModels.ProjectCreateViewModel
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Projects Index", "Index", "Projects")</li>
+    <li>@Html.ActionLink(Model.Name, "Details", "Projects", new { id = Model.ProjectId }, null)</li>
+    <li class="active">Project Details</li>
+</ol>
 
 <h2>Details: @Html.DisplayFor(model => model.Name)</h2>
 <div>

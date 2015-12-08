@@ -3,6 +3,11 @@
 @{
     ViewBag.Title = "Detail";
 }
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Group Index", "Index", "Groups")</li>
+    <li>@Html.ActionLink(Model.Name, "Details", "Groups", new { id = Model.GroupId }, null)</li>
+    <li class="active">Group Details</li>
+</ol>
 
 <h2>Detail</h2>
 

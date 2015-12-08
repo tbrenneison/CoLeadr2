@@ -22,3 +22,9 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.wideheader {
+    width: 100%; 
+    color: white;
+    background-color: purple;
+}
