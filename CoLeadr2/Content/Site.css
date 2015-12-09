@@ -23,8 +23,24 @@ textarea {
     max-width: 280px;
 }
 
-.wideheader {
-    width: 100%; 
-    color: white;
-    background-color: purple;
+.navcolor{
+    background-color: #1e0741;
+
+}
+
+.navbar-inverse .navbar-nav > li > a
+{
+    color: #84b5a2;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #2d8b92;
+}
+
+.breadcrumb{
+    margin-top: 10px;
+    background-color: #f1ead1;
+}
+.breadcrumb > .active {
+  color: #84b5a2;
 }
